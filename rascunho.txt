@@ -1,0 +1,69 @@
+// console.log("--------------------------------");
+// console.log("\n" + "Pastel");
+// console.log("ID: " + pastel.getId());
+// console.log("Nome: " + pastel.getNome());
+// console.log("Descrição: " + pastel.getDescricao());
+// console.log("Preço: " + pastel.getPreco());
+// console.log("Validade: " + pastel.getValidade());
+// console.log("Peso: " + pastel.getPeso());
+// console.log("Sabor: " + pastel.getSabor() + "\n");
+// console.log("--------------------------------");
+
+console.log(foodController.getAllFoods());
+
+
+
+
+
+
+
+
+
+// // Adicionar os itens ao banco de dados
+// const db = new Database();
+// db.addNewFood(pastel);
+// db.addNewDrink(refrigerante);
+// db.addNewDrink(cafe);
+
+// // Imprimir informações dos itens
+// console.log("--------------------------------");
+
+// console.log("\n" + "Pastel");
+// console.log("ID: " + pastel.getId());
+// console.log("Nome: " + pastel.getNome());
+// console.log("Descrição: " + pastel.getDescricao());
+// console.log("Preço: " + pastel.getPreco());
+// console.log("Validade: " + pastel.getValidade());
+// console.log("Peso: " + pastel.getPeso());
+// console.log("Sabor: " + pastel.getSabor() + "\n");
+
+// console.log("--------------------------------");
+
+// console.log("\n" + "Refrigerante");
+// console.log("ID: " + refrigerante.getId());
+// console.log("Nome: " + refrigerante.getNome());
+// console.log("Descrição: " + refrigerante.getDescricao());
+// console.log("Preço: " + refrigerante.getPreco());
+// console.log("Validade: " + refrigerante.getValidade());
+// console.log("Marca: " + refrigerante.getMarca());
+// console.log("Temperatura: " + refrigerante.getTemperatura());
+// console.log("Volume: " + refrigerante.getVolume() + "ml" + "\n");
+
+// console.log("--------------------------------");
+
+// console.log("\n" + "Café");
+// console.log("ID: " + cafe.getId());
+// console.log("Nome: " + cafe.getNome());
+// console.log("Descrição: " + cafe.getDescricao());
+// console.log("Preço: " + cafe.getPreco());
+// console.log("Validade: " + cafe.getValidade());
+// console.log("Marca: " + cafe.getMarca());
+// console.log("Temperatura: " + cafe.getTemperatura());
+// console.log("Volume: " + cafe.getVolume() + "ml" + "\n");
+
+// console.log("--------------------------------");
+
+// // Imprimir o conteúdo do Database
+// console.log("\n" + "Database");
+// console.log("Alimentos cadastrados:", db.getAllFoods());
+// console.log("Bebidas cadastradas:", db.getAllDrinks());
