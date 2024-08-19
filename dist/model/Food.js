@@ -10,6 +10,7 @@ class Food extends Product_1.default {
         super(id, nome, preco);
         this.peso = peso;
         this.sabor = sabor;
+        this.descricao = descricao;
     }
     getPeso() {
         return this.peso;
@@ -22,6 +23,9 @@ class Food extends Product_1.default {
     }
     setSabor(sabor) {
         this.sabor = sabor;
+    }
+    getDescricao() {
+        return this.descricao;
     }
 }
 exports.Food = Food;

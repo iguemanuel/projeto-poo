@@ -3,37 +3,6 @@ import FoodController from '../controller/FoodController';
 import { Food } from '../model/Food';
 import { Categoria } from '../model/FoodCategory';
 
-// export default class PrimaryScreen {
-
-//   private foodController: FoodController;
-//   private rl: readline.Interface;
-
-//   constructor(foodController: FoodController) {
-//     this.foodController = foodController;
-//     this.rl = readline.createInterface({
-//       input: process.stdin,
-//       output: process.stdout
-//     });
-//   }
-
-//   public async showMenu(): Promise<void> {
-//     let showMenu = false; 
-
-//     while (!showMenu){
-//       const choice = await this.prompt(
-//         '1. Adicionar nova comida\n2. Listar comida\n3. Sair\n'
-//       );
-      
-//       switch (choice) {
-//         case '1':
-//           let Food: Food = {this.foodController.addFood()};
-//           await this.
-//     }
-
-// }
-
-
-
 // Criar interface readline
 const rl = readline.createInterface({
     input: process.stdin,
@@ -49,19 +18,45 @@ const askQuestion = (question: string): Promise<string> => {
     });
 };
 
+// Função para validar e garantir que o ID é um número
+const askForValidId = async (): Promise<number> => {
+    while (true) {
+        const idInput = await askQuestion('Digite o ID do alimento: ');
+        const id = parseInt(idInput);
+
+        if (!isNaN(id)) {
+            return id;
+        } else {
+            console.log('Erro: O ID deve ser um número. Tente novamente.');
+        }
+    }
+};
+
+// Função para validar o sabor (Categoria)
+const askForValidCategoria = async (): Promise<Categoria> => {
+    while (true) {
+        const saborInput = await askQuestion('Digite o sabor do alimento (Salgado/Doce): ');
+
+        if (saborInput === 'Salgado') {
+            return Categoria.Salgado;
+        } else if (saborInput === 'Doce') {
+            return Categoria.Doce;
+        } else {
+            console.log('Erro: O sabor deve ser "Salgado" ou "Doce". Tente novamente.');
+        }
+    }
+};
+
 // Função principal para criar um novo alimento
 const main = async () => {
     try {
-        // Obter dados do usuário
-        const id = parseInt(await askQuestion('Digite o ID do alimento: '));
+        // Obter dados do usuário com validação
+        const id = await askForValidId();
         const nome = await askQuestion('Digite o nome do alimento: ');
         const descricao = await askQuestion('Digite a descrição do alimento: ');
         const preco = parseFloat(await askQuestion('Digite o preço do alimento: '));
         const peso = parseFloat(await askQuestion('Digite o peso do alimento: '));
-        const saborInput = await askQuestion('Digite o sabor do alimento (Salgado/Doce): ');
-
-        // Validar e converter o sabor
-        const sabor = saborInput === 'Salgado' ? Categoria.Salgado : Categoria.Doce;
+        const sabor = await askForValidCategoria();
 
         // Criar instância de Food
         const newFood = new Food(id, nome, descricao, preco, peso, sabor);
