@@ -80,32 +80,75 @@ const askForValidCategoria = () => __awaiter(void 0, void 0, void 0, function* (
         }
     }
 });
-// Função principal para criar um novo alimento
-const main = () => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        // Obter dados do usuário com validação
-        const id = yield askForValidId();
-        const nome = yield askQuestion('Digite o nome do alimento: ');
-        const descricao = yield askQuestion('Digite a descrição do alimento: ');
-        const preco = parseFloat(yield askQuestion('Digite o preço do alimento: '));
-        const peso = parseFloat(yield askQuestion('Digite o peso do alimento: '));
-        const sabor = yield askForValidCategoria();
-        // Criar instância de Food
-        const newFood = new Food_1.Food(id, nome, descricao, preco, peso, sabor);
-        // Instanciar o controller e adicionar o alimento
-        const foodController = new FoodController_1.default();
-        foodController.addFood(newFood);
-        // Listar todos os alimentos
+// Função para criar um novo alimento
+const createFood = (foodController) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = yield askForValidId();
+    const nome = yield askQuestion('Digite o nome do alimento: ');
+    const descricao = yield askQuestion('Digite a descrição do alimento: ');
+    const preco = parseFloat(yield askQuestion('Digite o preço do alimento: '));
+    const peso = parseFloat(yield askQuestion('Digite o peso do alimento: '));
+    const sabor = yield askForValidCategoria();
+    const newFood = new Food_1.Food(id, nome, descricao, preco, peso, sabor);
+    foodController.addFood(newFood);
+    console.log('Alimento cadastrado com sucesso!');
+});
+// Função para listar alimentos
+const listFoods = (foodController) => __awaiter(void 0, void 0, void 0, function* () {
+    const option = yield askQuestion('Digite 1 para listar todos ou 2 para listar por ID: ');
+    if (option === '1') {
         console.log('Alimentos cadastrados:');
         console.log(foodController.getAllFoods());
     }
-    catch (error) {
-        console.error('Ocorreu um erro:', error);
+    else if (option === '2') {
+        const id = yield askForValidId();
+        const food = foodController.getAllFoods().find(f => f.getId() === id);
+        if (food) {
+            console.log('Alimento encontrado:');
+            console.log(food.getFoodFormatado());
+        }
+        else {
+            console.log('Alimento não encontrado.');
+        }
     }
-    finally {
-        // Fechar a interface readline
-        rl.close();
+    else {
+        console.log('Opção inválida.');
     }
 });
-// Executar a função principal
+// Função para remover alimentos
+const removeFood = (foodController) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = yield askForValidId();
+    const food = foodController.getAllFoods().find(f => f.getId() === id);
+    if (food) {
+        foodController.removeFood(id);
+        console.log('Alimento removido com sucesso!');
+    }
+    else {
+        console.log('Alimento não encontrado.');
+    }
+});
+// Função principal que gerencia o mini terminal
+const main = () => __awaiter(void 0, void 0, void 0, function* () {
+    const foodController = new FoodController_1.default();
+    while (true) {
+        const option = yield askQuestion('\nEscolha uma opção:\n1. Cadastrar alimento\n2. Listar alimentos\n3. Remover alimento\n4. Encerrar\n');
+        switch (option) {
+            case '1':
+                yield createFood(foodController);
+                break;
+            case '2':
+                yield listFoods(foodController);
+                break;
+            case '3':
+                yield removeFood(foodController);
+                break;
+            case '4':
+                console.log('Encerrar');
+                rl.close();
+                return;
+            default:
+                console.log('Opção inválida. Tente novamente.');
+        }
+    }
+});
+// Executar a função principal ao iniciar o script
 main();
