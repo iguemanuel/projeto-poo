@@ -32,4 +32,8 @@ export class Food extends Product {
     public getDescricao(): string {
         return this.descricao;
     }
+
+    public getFoodFormatado(): string {
+        return `- Produto: ${this.getNome()}\n- Descrição: ${this.getDescricao()}\n- Peso: ${this.getPeso()}\n- Sabor: ${this.getSabor()}\n- Preço: ${this.getPreco()}`;
+    }
 }

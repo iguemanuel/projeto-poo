@@ -9,6 +9,35 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
+// Função principal que gerencia o mini terminal
+const main = async () => {
+    const foodController = new FoodController();
+
+    while (true) {
+        const option = await askQuestion(
+            '\nEscolha uma opção:\n1. Cadastrar alimento\n2. Listar alimentos\n3. Remover alimento\n4. Encerrar\n'
+        );
+
+        switch (option) {
+            case '1':
+                await createFood(foodController);
+                break;
+            case '2':
+                await listFoods(foodController);
+                break;
+            case '3':
+                await removeFood(foodController);
+                break;
+            case '4':
+                console.log('Encerrar');
+                rl.close();
+                return;
+            default:
+                console.log('Opção inválida. Tente novamente.');
+        }
+    }
+};
+
 // Função para ler a entrada do usuário
 const askQuestion = (question: string): Promise<string> => {
     return new Promise((resolve) => {
@@ -37,44 +66,62 @@ const askForValidCategoria = async (): Promise<Categoria> => {
     while (true) {
         const saborInput = await askQuestion('Digite o sabor do alimento (Salgado/Doce): ');
 
-        if (saborInput === 'Salgado') {
+        if (saborInput === 'Salgado' || saborInput === 'SALGADO') {
             return Categoria.Salgado;
-        } else if (saborInput === 'Doce') {
+        } else if (saborInput === 'Doce'|| saborInput === 'DOCE') {
             return Categoria.Doce;
         } else {
             console.log('Erro: O sabor deve ser "Salgado" ou "Doce". Tente novamente.');
         }
-    }
+    }  
 };
 
-// Função principal para criar um novo alimento
-const main = async () => {
-    try {
-        // Obter dados do usuário com validação
-        const id = await askForValidId();
-        const nome = await askQuestion('Digite o nome do alimento: ');
-        const descricao = await askQuestion('Digite a descrição do alimento: ');
-        const preco = parseFloat(await askQuestion('Digite o preço do alimento: '));
-        const peso = parseFloat(await askQuestion('Digite o peso do alimento: '));
-        const sabor = await askForValidCategoria();
+// Função para criar um novo alimento
+const createFood = async (foodController: FoodController) => {
+    const id = await askForValidId();
+    const nome = await askQuestion('Digite o nome do alimento: ');
+    const descricao = await askQuestion('Digite a descrição do alimento: ');
+    const preco = parseFloat(await askQuestion('Digite o preço do alimento: '));
+    const peso = parseFloat(await askQuestion('Digite o peso do alimento: '));
+    const sabor = await askForValidCategoria();
 
-        // Criar instância de Food
-        const newFood = new Food(id, nome, descricao, preco, peso, sabor);
+    const newFood = foodController.getNewFood(id, nome, descricao, preco, peso, sabor);
+    foodController.addFood(newFood);
+    
+    console.log('Alimento cadastrado com sucesso!');
+};
 
-        // Instanciar o controller e adicionar o alimento
-        const foodController = new FoodController();
-        foodController.addFood(newFood);
+// Função para listar alimentos
+const listFoods = async (foodController: FoodController) => {
+    const option = await askQuestion('Digite 1 para listar todos ou 2 para listar por ID: ');
 
-        // Listar todos os alimentos
+    if (option === '1') {
         console.log('Alimentos cadastrados:');
         console.log(foodController.getAllFoods());
-    } catch (error) {
-        console.error('Ocorreu um erro:', error);
-    } finally {
-        // Fechar a interface readline
-        rl.close();
+    } else if (option === '2') {
+        const id = await askForValidId();
+        const food = foodController.getAllFoods().find(f => f.getId() === id);
+        if (food) {
+            console.log(food.getFoodFormatado());
+        } else {
+            console.log('Alimento não encontrado.');
+        }
+    } else {
+        console.log('Opção inválida.');
     }
 };
 
-// Executar a função principal
-main();
+// Função para remover alimentos
+const removeFood = async (foodController: FoodController) => {
+    const id = await askForValidId();
+    const food = foodController.getAllFoods().find(f => f.getId() === id);
+
+    if (food) {
+        foodController.removeFood(id);
+        console.log('Alimento removido com sucesso!');
+    } else {
+        console.log('Alimento não encontrado.');
+    }
+};
+
+
