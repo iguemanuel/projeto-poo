@@ -37,7 +37,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const readline = __importStar(require("readline"));
 const FoodController_1 = __importDefault(require("../controller/FoodController"));
-const Food_1 = require("../model/Food");
 const FoodCategory_1 = require("../model/FoodCategory");
 // Criar interface readline
 const rl = readline.createInterface({
@@ -69,10 +68,10 @@ const askForValidId = () => __awaiter(void 0, void 0, void 0, function* () {
 const askForValidCategoria = () => __awaiter(void 0, void 0, void 0, function* () {
     while (true) {
         const saborInput = yield askQuestion('Digite o sabor do alimento (Salgado/Doce): ');
-        if (saborInput === 'Salgado') {
+        if (saborInput === 'Salgado' || saborInput === 'SALGADO') {
             return FoodCategory_1.Categoria.Salgado;
         }
-        else if (saborInput === 'Doce') {
+        else if (saborInput === 'Doce' || saborInput === 'DOCE') {
             return FoodCategory_1.Categoria.Doce;
         }
         else {
@@ -88,7 +87,7 @@ const createFood = (foodController) => __awaiter(void 0, void 0, void 0, functio
     const preco = parseFloat(yield askQuestion('Digite o preço do alimento: '));
     const peso = parseFloat(yield askQuestion('Digite o peso do alimento: '));
     const sabor = yield askForValidCategoria();
-    const newFood = new Food_1.Food(id, nome, descricao, preco, peso, sabor);
+    const newFood = foodController.getNewFood(id, nome, descricao, preco, peso, sabor);
     foodController.addFood(newFood);
     console.log('Alimento cadastrado com sucesso!');
 });
@@ -103,7 +102,6 @@ const listFoods = (foodController) => __awaiter(void 0, void 0, void 0, function
         const id = yield askForValidId();
         const food = foodController.getAllFoods().find(f => f.getId() === id);
         if (food) {
-            console.log('Alimento encontrado:');
             console.log(food.getFoodFormatado());
         }
         else {
