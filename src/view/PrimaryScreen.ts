@@ -1,7 +1,7 @@
 import * as readline from 'readline';
 import FoodController from '../controller/FoodController';
-import { Food } from '../model/Food';
 import { Categoria } from '../model/FoodCategory';
+import CustomError from '../types/CustomError';
 
 // Criar interface readline
 const rl = readline.createInterface({
@@ -66,9 +66,9 @@ const askForValidCategoria = async (): Promise<Categoria> => {
     while (true) {
         const saborInput = await askQuestion('Digite o sabor do alimento (Salgado/Doce): ');
 
-        if (saborInput === 'Salgado' || saborInput === 'SALGADO') {
+        if (saborInput.toLowerCase() === 'salgado') {
             return Categoria.Salgado;
-        } else if (saborInput === 'Doce'|| saborInput === 'DOCE') {
+        } else if (saborInput.toLowerCase() === 'doce') {
             return Categoria.Doce;
         } else {
             console.log('Erro: O sabor deve ser "Salgado" ou "Doce". Tente novamente.');
@@ -79,6 +79,12 @@ const askForValidCategoria = async (): Promise<Categoria> => {
 // Função para criar um novo alimento
 const createFood = async (foodController: FoodController) => {
     const id = await askForValidId();
+
+    // Verifica se o ID já existe
+    if (foodController.getAllFoods().some(f => f.getId() === id)) {
+        throw new CustomError(400, 'Erro: O ID já existe.');
+    }
+
     const nome = await askQuestion('Digite o nome do alimento: ');
     const descricao = await askQuestion('Digite a descrição do alimento: ');
     const preco = parseFloat(await askQuestion('Digite o preço do alimento: '));
@@ -87,7 +93,7 @@ const createFood = async (foodController: FoodController) => {
 
     const newFood = foodController.getNewFood(id, nome, descricao, preco, peso, sabor);
     foodController.addFood(newFood);
-    
+
     console.log('Alimento cadastrado com sucesso!');
 };
 
@@ -124,4 +130,14 @@ const removeFood = async (foodController: FoodController) => {
     }
 };
 
+// Função para tratar erros personalizados
+const handleError = (error: unknown) => {
+    if (error instanceof CustomError) {
+        error.sayError();
+    } else {
+        console.error('Erro inesperado:', error);
+    }
+};
 
+// Executar a função principal
+main();

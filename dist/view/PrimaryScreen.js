@@ -38,10 +38,35 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const readline = __importStar(require("readline"));
 const FoodController_1 = __importDefault(require("../controller/FoodController"));
 const FoodCategory_1 = require("../model/FoodCategory");
+const CustomError_1 = __importDefault(require("../types/CustomError"));
 // Criar interface readline
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
+});
+// Função principal que gerencia o mini terminal
+const main = () => __awaiter(void 0, void 0, void 0, function* () {
+    const foodController = new FoodController_1.default();
+    while (true) {
+        const option = yield askQuestion('\nEscolha uma opção:\n1. Cadastrar alimento\n2. Listar alimentos\n3. Remover alimento\n4. Encerrar\n');
+        switch (option) {
+            case '1':
+                yield createFood(foodController);
+                break;
+            case '2':
+                yield listFoods(foodController);
+                break;
+            case '3':
+                yield removeFood(foodController);
+                break;
+            case '4':
+                console.log('Encerrar');
+                rl.close();
+                return;
+            default:
+                console.log('Opção inválida. Tente novamente.');
+        }
+    }
 });
 // Função para ler a entrada do usuário
 const askQuestion = (question) => {
@@ -68,10 +93,10 @@ const askForValidId = () => __awaiter(void 0, void 0, void 0, function* () {
 const askForValidCategoria = () => __awaiter(void 0, void 0, void 0, function* () {
     while (true) {
         const saborInput = yield askQuestion('Digite o sabor do alimento (Salgado/Doce): ');
-        if (saborInput === 'Salgado' || saborInput === 'SALGADO') {
+        if (saborInput.toLowerCase() === 'salgado') {
             return FoodCategory_1.Categoria.Salgado;
         }
-        else if (saborInput === 'Doce' || saborInput === 'DOCE') {
+        else if (saborInput.toLowerCase() === 'doce') {
             return FoodCategory_1.Categoria.Doce;
         }
         else {
@@ -82,6 +107,10 @@ const askForValidCategoria = () => __awaiter(void 0, void 0, void 0, function* (
 // Função para criar um novo alimento
 const createFood = (foodController) => __awaiter(void 0, void 0, void 0, function* () {
     const id = yield askForValidId();
+    // Verifica se o ID já existe
+    if (foodController.getAllFoods().some(f => f.getId() === id)) {
+        throw new CustomError_1.default(400, 'Erro: O ID já existe.');
+    }
     const nome = yield askQuestion('Digite o nome do alimento: ');
     const descricao = yield askQuestion('Digite a descrição do alimento: ');
     const preco = parseFloat(yield askQuestion('Digite o preço do alimento: '));
@@ -124,29 +153,14 @@ const removeFood = (foodController) => __awaiter(void 0, void 0, void 0, functio
         console.log('Alimento não encontrado.');
     }
 });
-// Função principal que gerencia o mini terminal
-const main = () => __awaiter(void 0, void 0, void 0, function* () {
-    const foodController = new FoodController_1.default();
-    while (true) {
-        const option = yield askQuestion('\nEscolha uma opção:\n1. Cadastrar alimento\n2. Listar alimentos\n3. Remover alimento\n4. Encerrar\n');
-        switch (option) {
-            case '1':
-                yield createFood(foodController);
-                break;
-            case '2':
-                yield listFoods(foodController);
-                break;
-            case '3':
-                yield removeFood(foodController);
-                break;
-            case '4':
-                console.log('Encerrar');
-                rl.close();
-                return;
-            default:
-                console.log('Opção inválida. Tente novamente.');
-        }
+// Função para tratar erros personalizados
+const handleError = (error) => {
+    if (error instanceof CustomError_1.default) {
+        error.sayError();
     }
-});
-// Executar a função principal ao iniciar o script
+    else {
+        console.error('Erro inesperado:', error);
+    }
+};
+// Executar a função principal
 main();

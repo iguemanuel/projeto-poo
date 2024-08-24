@@ -1,4 +1,4 @@
- export default class Product{
+export default abstract class Product{
     private id: number;
     private nome: string;
     private preco: number;
