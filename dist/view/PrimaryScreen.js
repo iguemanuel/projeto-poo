@@ -38,13 +38,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const readline = __importStar(require("readline"));
 const FoodController_1 = __importDefault(require("../controller/FoodController"));
 const FoodCategory_1 = require("../model/FoodCategory");
-const CustomError_1 = __importDefault(require("../types/CustomError"));
-// Criar interface readline
+// interface
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
-// Função principal que gerencia o mini terminal
+// mini terminal gerencial
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const foodController = new FoodController_1.default();
     while (true) {
@@ -68,7 +67,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         }
     }
 });
-// Função para ler a entrada do usuário
+// Ler a entrada do usuário
 const askQuestion = (question) => {
     return new Promise((resolve) => {
         rl.question(question, (answer) => {
@@ -76,7 +75,7 @@ const askQuestion = (question) => {
         });
     });
 };
-// Função para validar e garantir que o ID é um número
+// Validar e garantir que o ID é um número
 const askForValidId = () => __awaiter(void 0, void 0, void 0, function* () {
     while (true) {
         const idInput = yield askQuestion('Digite o ID do alimento: ');
@@ -104,13 +103,9 @@ const askForValidCategoria = () => __awaiter(void 0, void 0, void 0, function* (
         }
     }
 });
-// Função para criar um novo alimento
+// criar um novo alimemnto
 const createFood = (foodController) => __awaiter(void 0, void 0, void 0, function* () {
     const id = yield askForValidId();
-    // Verifica se o ID já existe
-    if (foodController.getAllFoods().some(f => f.getId() === id)) {
-        throw new CustomError_1.default(400, 'Erro: O ID já existe.');
-    }
     const nome = yield askQuestion('Digite o nome do alimento: ');
     const descricao = yield askQuestion('Digite a descrição do alimento: ');
     const preco = parseFloat(yield askQuestion('Digite o preço do alimento: '));
@@ -120,7 +115,7 @@ const createFood = (foodController) => __awaiter(void 0, void 0, void 0, functio
     foodController.addFood(newFood);
     console.log('Alimento cadastrado com sucesso!');
 });
-// Função para listar alimentos
+// listar alimentos
 const listFoods = (foodController) => __awaiter(void 0, void 0, void 0, function* () {
     const option = yield askQuestion('Digite 1 para listar todos ou 2 para listar por ID: ');
     if (option === '1') {
@@ -141,7 +136,7 @@ const listFoods = (foodController) => __awaiter(void 0, void 0, void 0, function
         console.log('Opção inválida.');
     }
 });
-// Função para remover alimentos
+// remover alimentos
 const removeFood = (foodController) => __awaiter(void 0, void 0, void 0, function* () {
     const id = yield askForValidId();
     const food = foodController.getAllFoods().find(f => f.getId() === id);
@@ -153,14 +148,4 @@ const removeFood = (foodController) => __awaiter(void 0, void 0, void 0, functio
         console.log('Alimento não encontrado.');
     }
 });
-// Função para tratar erros personalizados
-const handleError = (error) => {
-    if (error instanceof CustomError_1.default) {
-        error.sayError();
-    }
-    else {
-        console.error('Erro inesperado:', error);
-    }
-};
-// Executar a função principal
 main();

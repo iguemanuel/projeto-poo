@@ -13,8 +13,13 @@ export class Food extends Product {
         this.descricao = descricao;
     }
 
+    //Sobrescrita de getNome de produto
+    public getNome(): string {
+        return `${super.getNome()}`;
+    }
+
     public getPeso(): number {
-        return this.peso;
+        return this.peso; 
     }
 
     public setPeso(peso: number): void {

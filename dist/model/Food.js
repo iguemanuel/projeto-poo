@@ -12,6 +12,9 @@ class Food extends Product_1.default {
         this.sabor = sabor;
         this.descricao = descricao;
     }
+    getNome() {
+        return `${super.getNome()}`;
+    }
     getPeso() {
         return this.peso;
     }

@@ -3,13 +3,13 @@ import FoodController from '../controller/FoodController';
 import { Categoria } from '../model/FoodCategory';
 import CustomError from '../types/CustomError';
 
-// Criar interface readline
+// interface
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
 
-// Função principal que gerencia o mini terminal
+// mini terminal gerencial
 const main = async () => {
     const foodController = new FoodController();
 
@@ -38,7 +38,7 @@ const main = async () => {
     }
 };
 
-// Função para ler a entrada do usuário
+// Ler a entrada do usuário
 const askQuestion = (question: string): Promise<string> => {
     return new Promise((resolve) => {
         rl.question(question, (answer) => {
@@ -47,7 +47,7 @@ const askQuestion = (question: string): Promise<string> => {
     });
 };
 
-// Função para validar e garantir que o ID é um número
+// Validar e garantir que o ID é um número
 const askForValidId = async (): Promise<number> => {
     while (true) {
         const idInput = await askQuestion('Digite o ID do alimento: ');
@@ -76,15 +76,9 @@ const askForValidCategoria = async (): Promise<Categoria> => {
     }  
 };
 
-// Função para criar um novo alimento
+// criar um novo alimemnto
 const createFood = async (foodController: FoodController) => {
     const id = await askForValidId();
-
-    // Verifica se o ID já existe
-    if (foodController.getAllFoods().some(f => f.getId() === id)) {
-        throw new CustomError(400, 'Erro: O ID já existe.');
-    }
-
     const nome = await askQuestion('Digite o nome do alimento: ');
     const descricao = await askQuestion('Digite a descrição do alimento: ');
     const preco = parseFloat(await askQuestion('Digite o preço do alimento: '));
@@ -97,7 +91,7 @@ const createFood = async (foodController: FoodController) => {
     console.log('Alimento cadastrado com sucesso!');
 };
 
-// Função para listar alimentos
+// listar alimentos
 const listFoods = async (foodController: FoodController) => {
     const option = await askQuestion('Digite 1 para listar todos ou 2 para listar por ID: ');
 
@@ -117,7 +111,7 @@ const listFoods = async (foodController: FoodController) => {
     }
 };
 
-// Função para remover alimentos
+// remover alimentos
 const removeFood = async (foodController: FoodController) => {
     const id = await askForValidId();
     const food = foodController.getAllFoods().find(f => f.getId() === id);
@@ -130,14 +124,4 @@ const removeFood = async (foodController: FoodController) => {
     }
 };
 
-// Função para tratar erros personalizados
-const handleError = (error: unknown) => {
-    if (error instanceof CustomError) {
-        error.sayError();
-    } else {
-        console.error('Erro inesperado:', error);
-    }
-};
-
-// Executar a função principal
 main();
