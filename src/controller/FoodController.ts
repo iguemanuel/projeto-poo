@@ -48,17 +48,18 @@ export default class FoodController implements IFoodController {
         console.log(this.db.getFoodSize());
     }
 
-    // Certifique-se de que este método retorne um array de Food
     public getAllFoods(): Food[] {
-        return this.db.getAllFoods(); // Isso deve ser um array de Food
+        return this.db.getAllFoods(); 
     }
 
     public getAllFoodsFormatted(): string[] {
         return this.db.getAllFoods().map(food => food.getFoodFormatado());
     }
     
-
-    public removeFood(id: number): void {
-        this.db.removeFood(id);
+    public removeFoodById(id: number): void {
+        this.db.removeFoodById(id); // Chama o método do banco de dados para remover o alimento
+        console.log(`Alimento com ID ${id} foi excluído com sucesso.`);
     }
+    
 }
+

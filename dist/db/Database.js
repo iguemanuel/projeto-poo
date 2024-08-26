@@ -2,19 +2,26 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 class Database {
     constructor() {
-        this.comidas = [];
+        this.foods = [];
     }
     addNewFood(food) {
-        this.comidas.push(food);
+        this.foods.push(food);
     }
     removeFood(index) {
-        this.comidas.splice(index, 1);
+        this.foods.splice(index, 1);
     }
     getFoodSize() {
-        return this.comidas.length;
+        return this.foods.length;
     }
     getAllFoods() {
-        return [...this.comidas];
+        return [...this.foods];
+    }
+    removeFoodById(id) {
+        const index = this.foods.findIndex(food => food.getId() === id);
+        if (index === -1) {
+            throw new Error(`Alimento com ID ${id} não encontrado.`);
+        }
+        this.foods.splice(index, 1);
     }
 }
 exports.default = Database;

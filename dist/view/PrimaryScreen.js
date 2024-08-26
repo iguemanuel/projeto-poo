@@ -47,7 +47,7 @@ const rl = readline.createInterface({
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const foodController = new FoodController_1.default();
     while (true) {
-        const option = yield askQuestion('\nEscolha uma opção:\n1. Cadastrar alimento\n2. Listar alimentos\n3. Remover alimento\n4. Encerrar\n \n');
+        const option = yield askQuestion('\nEscolha uma opção:\n1. Cadastrar alimento\n2. Listar alimentos\n3. Remover alimento\n4. Encerrar\n');
         switch (option) {
             case '1':
                 yield createFood(foodController);
@@ -109,7 +109,7 @@ const createFood = (foodController) => __awaiter(void 0, void 0, void 0, functio
     const nome = yield askQuestion('Digite o nome do alimento: ');
     const descricao = yield askQuestion('Digite a descrição do alimento: ');
     const preco = parseFloat(yield askQuestion('Digite o preço do alimento R$: '));
-    const peso = parseFloat(yield askQuestion('Digite o peso do alimento me KG: '));
+    const peso = parseFloat(yield askQuestion('Digite o peso do alimento me KG): '));
     // Chamando a função de validação de sabor
     const sabor = yield askForValidCategoria();
     // Criando o novo alimento com todos os parâmetros
@@ -122,8 +122,7 @@ const listFoods = (foodController) => __awaiter(void 0, void 0, void 0, function
     const option = yield askQuestion('Digite 1 para listar todos ou 2 para listar por ID: ');
     if (option === '1') {
         console.log('Alimentos cadastrados:');
-        const formattedFoods = foodController.getAllFoodsFormatted();
-        console.log(formattedFoods.join('\n')); // Imprime todos os alimentos formatados
+        console.log(foodController.getAllFoods());
     }
     else if (option === '2') {
         const id = yield askForValidId();
@@ -144,7 +143,7 @@ const removeFood = (foodController) => __awaiter(void 0, void 0, void 0, functio
     const id = yield askForValidId();
     const food = foodController.getAllFoods().find(f => f.getId() === id);
     if (food) {
-        foodController.removeFood(id);
+        foodController.removeFoodById(id);
         console.log('Alimento removido com sucesso!');
     }
     else {

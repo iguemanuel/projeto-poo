@@ -40,15 +40,15 @@ class FoodController {
     listFood() {
         console.log(this.db.getFoodSize());
     }
-    // Certifique-se de que este método retorne um array de Food
     getAllFoods() {
-        return this.db.getAllFoods(); // Isso deve ser um array de Food
+        return this.db.getAllFoods();
     }
     getAllFoodsFormatted() {
         return this.db.getAllFoods().map(food => food.getFoodFormatado());
     }
-    removeFood(id) {
-        this.db.removeFood(id);
+    removeFoodById(id) {
+        this.db.removeFoodById(id); // Chama o método do banco de dados para remover o alimento
+        console.log(`Alimento com ID ${id} foi excluído com sucesso.`);
     }
 }
 exports.default = FoodController;

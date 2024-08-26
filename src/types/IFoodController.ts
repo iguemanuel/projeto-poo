@@ -6,5 +6,5 @@ export interface IFoodController {
     getNewFood(id: number, nome: string, descricao: string, preco: number, peso: number, sabor: Categoria): Food;
     listFood(): void;
     getAllFoods(): void;
-    removeFood(id: number): void;
+    removeFoodById(id: number): void;
 }

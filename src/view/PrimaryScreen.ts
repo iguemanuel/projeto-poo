@@ -120,7 +120,7 @@ const removeFood = async (foodController: FoodController) => {
     const food = foodController.getAllFoods().find(f => f.getId() === id);
 
     if (food) {
-        foodController.removeFood(id);
+        foodController.removeFoodById(id);
         console.log('Alimento removido com sucesso!');
     } else {
         console.log('Alimento não encontrado.');
