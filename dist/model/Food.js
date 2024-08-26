@@ -12,8 +12,9 @@ class Food extends Product_1.default {
         this.sabor = sabor;
         this.descricao = descricao;
     }
+    // Sobrescrita de getNome de Produto
     getNome() {
-        return `${super.getNome()}`;
+        return super.getNome();
     }
     getPeso() {
         return this.peso;
@@ -31,7 +32,10 @@ class Food extends Product_1.default {
         return this.descricao;
     }
     getFoodFormatado() {
-        return `- Produto: ${this.getNome()}\n- Descrição: ${this.getDescricao()}\n- Peso: ${this.getPeso()}\n- Sabor: ${this.getSabor()}\n- Preço: ${this.getPreco()}`;
+        return `${this.LinhaSeparadora()}- Produto: ${this.getNome()}\n- Descrição: ${this.getDescricao()}\n- Peso: ${this.getPeso()}\n- Sabor: ${this.getSabor()}\n- R$: ${this.getPreco()}${this.LinhaSeparadora()}`;
+    }
+    LinhaSeparadora() {
+        return '\n----------------------------------\n';
     }
 }
 exports.Food = Food;

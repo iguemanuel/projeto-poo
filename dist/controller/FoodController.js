@@ -10,7 +10,25 @@ class FoodController {
     constructor() {
         this.db = new Database_1.default();
     }
+    // Implementação com validação usando try-catch
     getNewFood(id, nome, descricao, preco, peso, sabor) {
+        try {
+            if (preco <= 0) {
+                throw new CustomError_1.default(402, 'Erro: O preço deve ser maior que zero.');
+            }
+            if (peso <= 0) {
+                throw new CustomError_1.default(402, 'Erro: O peso deve ser maior que zero.');
+            }
+            if (sabor === undefined) {
+                throw new CustomError_1.default(402, 'Erro: O sabor deve ser definido.');
+            }
+        }
+        catch (error) {
+            if (error instanceof CustomError_1.default) {
+                error.sayError();
+            }
+            throw error; // Relança o erro após o tratamento
+        }
         return new Food_1.Food(id, nome, descricao, preco, peso, sabor);
     }
     addFood(food) {
@@ -22,8 +40,12 @@ class FoodController {
     listFood() {
         console.log(this.db.getFoodSize());
     }
+    // Certifique-se de que este método retorne um array de Food
     getAllFoods() {
-        return this.db.getAllFoods();
+        return this.db.getAllFoods(); // Isso deve ser um array de Food
+    }
+    getAllFoodsFormatted() {
+        return this.db.getAllFoods().map(food => food.getFoodFormatado());
     }
     removeFood(id) {
         this.db.removeFood(id);

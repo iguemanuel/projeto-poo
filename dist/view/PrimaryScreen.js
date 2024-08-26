@@ -47,7 +47,7 @@ const rl = readline.createInterface({
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const foodController = new FoodController_1.default();
     while (true) {
-        const option = yield askQuestion('\nEscolha uma opção:\n1. Cadastrar alimento\n2. Listar alimentos\n3. Remover alimento\n4. Encerrar\n');
+        const option = yield askQuestion('\nEscolha uma opção:\n1. Cadastrar alimento\n2. Listar alimentos\n3. Remover alimento\n4. Encerrar\n \n');
         switch (option) {
             case '1':
                 yield createFood(foodController);
@@ -103,14 +103,16 @@ const askForValidCategoria = () => __awaiter(void 0, void 0, void 0, function* (
         }
     }
 });
-// criar um novo alimemnto
+// criar um novo alimento
 const createFood = (foodController) => __awaiter(void 0, void 0, void 0, function* () {
     const id = yield askForValidId();
     const nome = yield askQuestion('Digite o nome do alimento: ');
     const descricao = yield askQuestion('Digite a descrição do alimento: ');
-    const preco = parseFloat(yield askQuestion('Digite o preço do alimento: '));
-    const peso = parseFloat(yield askQuestion('Digite o peso do alimento: '));
+    const preco = parseFloat(yield askQuestion('Digite o preço do alimento R$: '));
+    const peso = parseFloat(yield askQuestion('Digite o peso do alimento me KG: '));
+    // Chamando a função de validação de sabor
     const sabor = yield askForValidCategoria();
+    // Criando o novo alimento com todos os parâmetros
     const newFood = foodController.getNewFood(id, nome, descricao, preco, peso, sabor);
     foodController.addFood(newFood);
     console.log('Alimento cadastrado com sucesso!');
@@ -120,7 +122,8 @@ const listFoods = (foodController) => __awaiter(void 0, void 0, void 0, function
     const option = yield askQuestion('Digite 1 para listar todos ou 2 para listar por ID: ');
     if (option === '1') {
         console.log('Alimentos cadastrados:');
-        console.log(foodController.getAllFoods());
+        const formattedFoods = foodController.getAllFoodsFormatted();
+        console.log(formattedFoods.join('\n')); // Imprime todos os alimentos formatados
     }
     else if (option === '2') {
         const id = yield askForValidId();

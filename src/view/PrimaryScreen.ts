@@ -76,15 +76,18 @@ const askForValidCategoria = async (): Promise<Categoria> => {
     }  
 };
 
-// criar um novo alimemnto
+// criar um novo alimento
 const createFood = async (foodController: FoodController) => {
     const id = await askForValidId();
     const nome = await askQuestion('Digite o nome do alimento: ');
     const descricao = await askQuestion('Digite a descrição do alimento: ');
-    const preco = parseFloat(await askQuestion('Digite o preço do alimento: '));
-    const peso = parseFloat(await askQuestion('Digite o peso do alimento: '));
-    const sabor = await askForValidCategoria();
+    const preco = parseFloat(await askQuestion('Digite o preço do alimento R$: '));
+    const peso = parseFloat(await askQuestion('Digite o peso do alimento me KG): '));
+    
+    // Chamando a função de validação de sabor
+    const sabor = await askForValidCategoria(); 
 
+    // Criando o novo alimento com todos os parâmetros
     const newFood = foodController.getNewFood(id, nome, descricao, preco, peso, sabor);
     foodController.addFood(newFood);
 
