@@ -31,123 +31,133 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const readline = __importStar(require("readline"));
-const FoodController_1 = __importDefault(require("../controller/FoodController"));
 const FoodCategory_1 = require("../model/FoodCategory");
-// interface
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
-// mini terminal gerencial
-const main = () => __awaiter(void 0, void 0, void 0, function* () {
-    const foodController = new FoodController_1.default();
-    while (true) {
-        const option = yield askQuestion('\nEscolha uma opção:\n1. Cadastrar alimento\n2. Listar alimentos\n3. Remover alimento\n4. Encerrar\n');
-        switch (option) {
-            case '1':
-                yield createFood(foodController);
-                break;
-            case '2':
-                yield listFoods(foodController);
-                break;
-            case '3':
-                yield removeFood(foodController);
-                break;
-            case '4':
-                console.log('Encerrar');
-                rl.close();
-                return;
-            default:
-                console.log('Opção inválida. Tente novamente.');
-        }
-    }
-});
-// Ler a entrada do usuário
-const askQuestion = (question) => {
-    return new Promise((resolve) => {
-        rl.question(question, (answer) => {
-            resolve(answer);
+class PrimaryScreen {
+    constructor(foodController) {
+        this.rl = readline.createInterface({
+            input: process.stdin,
+            output: process.stdout
         });
-    });
-};
-// Validar e garantir que o ID é um número
-const askForValidId = () => __awaiter(void 0, void 0, void 0, function* () {
-    while (true) {
-        const idInput = yield askQuestion('Digite o ID do alimento: ');
-        const id = parseInt(idInput);
-        if (!isNaN(id)) {
-            return id;
-        }
-        else {
-            console.log('Erro: O ID deve ser um número. Tente novamente.');
-        }
+        this.foodController = foodController;
     }
-});
-// Função para validar o sabor (Categoria)
-const askForValidCategoria = () => __awaiter(void 0, void 0, void 0, function* () {
-    while (true) {
-        const saborInput = yield askQuestion('Digite o sabor do alimento (Salgado/Doce): ');
-        if (saborInput.toLowerCase() === 'salgado') {
-            return FoodCategory_1.Categoria.Salgado;
-        }
-        else if (saborInput.toLowerCase() === 'doce') {
-            return FoodCategory_1.Categoria.Doce;
-        }
-        else {
-            console.log('Erro: O sabor deve ser "Salgado" ou "Doce". Tente novamente.');
-        }
+    main() {
+        return __awaiter(this, void 0, void 0, function* () {
+            while (true) {
+                const option = yield this.askQuestion('\nEscolha uma opção:\n1. Cadastrar alimento\n2. Listar alimentos\n3. Remover alimento\n4. Encerrar\n');
+                switch (option) {
+                    case '1':
+                        yield this.createFood();
+                        break;
+                    case '2':
+                        yield this.listFoods();
+                        break;
+                    case '3':
+                        yield this.removeFood();
+                        break;
+                    case '4':
+                        console.log('Encerrando o programa.');
+                        this.rl.close();
+                        return;
+                    default:
+                        console.log('Opção inválida. Tente novamente.');
+                }
+            }
+        });
     }
-});
-// criar um novo alimento
-const createFood = (foodController) => __awaiter(void 0, void 0, void 0, function* () {
-    const id = yield askForValidId();
-    const nome = yield askQuestion('Digite o nome do alimento: ');
-    const descricao = yield askQuestion('Digite a descrição do alimento: ');
-    const preco = parseFloat(yield askQuestion('Digite o preço do alimento R$: '));
-    const peso = parseFloat(yield askQuestion('Digite o peso do alimento me KG): '));
-    // Chamando a função de validação de sabor
-    const sabor = yield askForValidCategoria();
-    // Criando o novo alimento com todos os parâmetros
-    const newFood = foodController.getNewFood(id, nome, descricao, preco, peso, sabor);
-    foodController.addFood(newFood);
-    console.log('Alimento cadastrado com sucesso!');
-});
-// listar alimentos
-const listFoods = (foodController) => __awaiter(void 0, void 0, void 0, function* () {
-    const option = yield askQuestion('Digite 1 para listar todos ou 2 para listar por ID: ');
-    if (option === '1') {
-        console.log('Alimentos cadastrados:');
-        console.log(foodController.getAllFoods());
+    // Ler a entrada do usuário
+    askQuestion(question) {
+        return new Promise((resolve) => {
+            this.rl.question(question, (answer) => {
+                resolve(answer);
+            });
+        });
     }
-    else if (option === '2') {
-        const id = yield askForValidId();
-        const food = foodController.getAllFoods().find(f => f.getId() === id);
-        if (food) {
-            console.log(food.getFoodFormatado());
-        }
-        else {
-            console.log('Alimento não encontrado.');
-        }
+    // Validar e garantir que o ID é um número
+    askForValidId() {
+        return __awaiter(this, void 0, void 0, function* () {
+            while (true) {
+                const idInput = yield this.askQuestion('Digite o ID do alimento: ');
+                const id = parseInt(idInput);
+                if (!isNaN(id)) {
+                    return id;
+                }
+                else {
+                    console.log('Erro: O ID deve ser um número. Tente novamente.');
+                }
+            }
+        });
     }
-    else {
-        console.log('Opção inválida.');
+    // Função para validar o sabor (Categoria)
+    askForValidCategoria() {
+        return __awaiter(this, void 0, void 0, function* () {
+            while (true) {
+                const saborInput = yield this.askQuestion('Digite o sabor do alimento (Salgado/Doce): ');
+                if (saborInput.toLowerCase() === 'salgado') {
+                    return FoodCategory_1.Categoria.Salgado;
+                }
+                else if (saborInput.toLowerCase() === 'doce') {
+                    return FoodCategory_1.Categoria.Doce;
+                }
+                else {
+                    console.log('Erro: O sabor deve ser "Salgado" ou "Doce". Tente novamente.');
+                }
+            }
+        });
     }
-});
-// remover alimentos
-const removeFood = (foodController) => __awaiter(void 0, void 0, void 0, function* () {
-    const id = yield askForValidId();
-    const food = foodController.getAllFoods().find(f => f.getId() === id);
-    if (food) {
-        foodController.removeFoodById(id);
-        console.log('Alimento removido com sucesso!');
+    // Criar um novo alimento
+    createFood() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = yield this.askForValidId();
+            const nome = yield this.askQuestion('Digite o nome do alimento: ');
+            const descricao = yield this.askQuestion('Digite a descrição do alimento: ');
+            const preco = parseFloat(yield this.askQuestion('Digite o preço do alimento R$: '));
+            const peso = parseFloat(yield this.askQuestion('Digite o peso do alimento em KG: '));
+            // Chamando a função de validação de sabor
+            const sabor = yield this.askForValidCategoria();
+            // Criando o novo alimento com todos os parâmetros
+            const newFood = this.foodController.getNewFood(id, nome, descricao, preco, peso, sabor);
+            this.foodController.addFood(newFood);
+            console.log('Alimento cadastrado com sucesso!');
+        });
     }
-    else {
-        console.log('Alimento não encontrado.');
+    // Listar alimentos
+    listFoods() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const option = yield this.askQuestion('Digite 1 para listar todos ou 2 para listar por ID: ');
+            if (option === '1') {
+                console.log('Alimentos cadastrados:');
+                console.log(this.foodController.getAllFoods());
+            }
+            else if (option === '2') {
+                const id = yield this.askForValidId();
+                const food = this.foodController.getAllFoods().find(f => f.getId() === id);
+                if (food) {
+                    console.log(food.getFoodFormatado());
+                }
+                else {
+                    console.log('Alimento não encontrado.');
+                }
+            }
+            else {
+                console.log('Opção inválida.');
+            }
+        });
     }
-});
-main();
+    // Remover alimentos
+    removeFood() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = yield this.askForValidId();
+            const food = this.foodController.getAllFoods().find(f => f.getId() === id);
+            if (food) {
+                this.foodController.removeFoodById(id);
+                console.log('Alimento removido com sucesso!');
+            }
+            else {
+                console.log('Alimento não encontrado.');
+            }
+        });
+    }
+}
+exports.default = PrimaryScreen;
